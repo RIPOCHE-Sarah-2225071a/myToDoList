@@ -51,6 +51,7 @@ function App() {
         <>
             <h1>To Do List</h1>
             {/* TODO : Ajouter le x/y taches terminées */}
+            <p>{maListe.filter(tache => tache.fini === true).length} / {maListe.length} taches terminées</p>
             {/* Partie d'ajout de tache */}
             <form action="submit" onSubmit={ajouterToDo}>
                 <input ref={addInputs} type="hidden" value={maListe.length}/>
