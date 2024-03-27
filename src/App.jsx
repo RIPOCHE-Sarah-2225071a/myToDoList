@@ -35,7 +35,7 @@ function App() {
     };
 
     const modifierToDo = (tacheId, texte) => {
-        setMaListe(maListe.map(tache => tache.id === tacheId ? {id:tacheId, name:texte, tache:fini} : tache));
+        setMaListe(maListe.map(tache => tache.id === tacheId ? {id:tacheId, name:texte, fini:tache.fini} : tache));
     };
 
     const confirmerToDo = () => {
@@ -52,7 +52,6 @@ function App() {
             <h1>To Do List</h1>
             {/* TODO : Ajouter le x/y taches terminées */}
             {/* Partie d'ajout de tache */}
-            {/* TODO : Ajouter la modification */}
             <form action="submit" onSubmit={ajouterToDo}>
                 <input ref={addInputs} type="hidden" value={maListe.length}/>
                 <input ref={addInputs} type="text" placeholder="Entrez votre tache ici"/>

@@ -14,11 +14,11 @@ export default function Item(props) {
 
     return (
         <li>
-            <form onSubmit={supprimerItem} onChange={modifierItem}>
+            <form onSubmit={supprimerItem} onChange={modifierItem} >
                 {/* eslint-disable-next-line react/prop-types */}
                 <input type="checkbox" value={props.fini}/>
                 {/* eslint-disable-next-line react/prop-types */}
-                <input value={props.name} />
+                <input defaultValue={props.name} />
                 {/* eslint-disable-next-line react/prop-types */}
                 <button>X</button>
             </form>
