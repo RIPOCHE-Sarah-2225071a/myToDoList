@@ -42,6 +42,8 @@
 }
 
 form {
+  display: flex;
+  flex-direction: row;
   background-color: #535bf2;
 }
 

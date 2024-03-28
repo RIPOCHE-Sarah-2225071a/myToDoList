@@ -56,10 +56,16 @@ button:focus-visible {
   }
 }
 
-.calendar {
+.calendrier {
    color: #000000
 }
 
-.calendar * {
+.calendrier * {
   color: inherit;
+}
+
+.date {
+  margin: 0;
+  padding-right: 5px;
+  padding-left: 5px;
 }
