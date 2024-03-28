@@ -8,9 +8,10 @@ export default function Item(props) {
 
     function modifierItem(e) {
         e.preventDefault();
+        const newText = e.target.parentNode.parentNode.querySelector(".texte").value;
+        const newDate = e.target.parentNode.parentNode.querySelector(".date").value;
         // eslint-disable-next-line react/prop-types
-        alert(props.text)
-        props.onChange(props.id, props.text); // Transmet l'ID et le texte a modifier
+        props.onChange(props.id, newText, newDate); // Transmet l'ID et le texte a modifier
     }
 
     function finirItem(e) {
@@ -19,15 +20,33 @@ export default function Item(props) {
         props.onConfirm(props.id, props.fini); // Transmet l'ID et le statut de la tache
     }
 
+    function changerDate(e) {
+        e.preventDefault();
+        // eslint-disable-next-line react/prop-types
+        props.changeDate(props.id);
+        // eslint-disable-next-line react/prop-types
+        props.calendrier(true);
+    }
+
     return (
         <li>
-            <form onSubmit={supprimerItem}>
+            <form>
                 {/* eslint-disable-next-line react/prop-types */}
                 <input type="checkbox" defaultChecked={props.fini} onChange={finirItem}/>
                 {/* eslint-disable-next-line react/prop-types */}
-                <input defaultValue={props.text} onChange={modifierItem}/>
+                <input className="texte" defaultValue={props.text}/>
                 {/* eslint-disable-next-line react/prop-types */}
-                <button>X</button>
+                <input type="date" className="date" defaultValue={props.date}/>
+                <button onClick={changerDate}>
+                    <img src="images/calendar-days-svgrepo-com.svg" alt="choisirDate"></img>
+                </button>
+                <button onClick={modifierItem}>
+                    <img src="images/pencil-svgrepo-com.svg" alt="editer"></img>
+                </button>
+                {/* eslint-disable-next-line react/prop-types */}
+                <button onClick={supprimerItem}>
+                    <img src="images/red-trash-can-icon.svg" alt={"poubelle"}></img>
+                </button>
             </form>
         </li>
     );

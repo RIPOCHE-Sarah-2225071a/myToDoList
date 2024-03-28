@@ -1,4 +1,4 @@
-import {useRef, useState, useEffect } from 'react'
+import {useRef, useState, useEffect, useId } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -6,6 +6,7 @@ import ButtonWithSVGIcon from "./Components/ButtonWithSVGIcon.jsx";
 import MyInput from "./Components/MyInput.jsx";
 import Item from "./Components/Item.jsx";
 import Calendar from 'react-calendar'
+import 'react-calendar/dist/Calendar.css';
 
 function App() {
     //localStorage.removeItem('tache')
@@ -15,8 +16,10 @@ function App() {
         const initialValue = JSON.parse(saved);
         return initialValue || "";
     });*/
+    const [index, setIndex] = useState(0);
     let [maListe, setMaListe] = useState([])
     const inputs = useRef([]);
+    const [calendrier, setCalendrier] = useState(true);
 
     const addInputs = el => {
         if (el && !inputs.current.includes(el)){
@@ -26,10 +29,11 @@ function App() {
 
     const ajouterToDo = (e) => {
         e.preventDefault();
-        let tache = {id:inputs.current[0].value, text:inputs.current[1].value, fini:false}
+        setIndex(prevState => prevState + 1);
+        let tache = {id:index, text:inputs.current[1].value, fini:false, date:null}
         setMaListe([...maListe, tache]);
         clearInputs();
-        localStorage.setItem('tache', JSON.stringify([...maListe, tache]));
+        localStorage.setItem('tache', JSON.stringify(maListe));
     };
 
     const clearInputs = () => {
@@ -40,11 +44,13 @@ function App() {
 
     const supprimerToDo = (tacheId) => {
         setMaListe(maListe.filter(tache => tache.id !== tacheId));
+        localStorage.setItem('tache', JSON.stringify(maListe));
     };
 
-    const modifierToDo = (tacheId, texte) => {
+    const modifierToDo = (tacheId, texte, date) => {
         console.log(texte)
-        setMaListe(maListe.map(tache => tache.id === tacheId ? {...tache, text:texte} : tache));
+        setMaListe(maListe.map(tache => tache.id === tacheId ? {id:tache.id, text:texte, fini:tache.fini, date:date} : tache));
+        console.log(maListe.map(tache => tache.id === tacheId ? {id:tache.id, text:texte, fini:tache.fini, date:date} : tache));
         console.log(maListe)
         localStorage.setItem('tache', JSON.stringify(maListe))
     };
@@ -53,6 +59,11 @@ function App() {
         setMaListe(maListe.map(tache => tache.id === tacheId ? {...tache, fini:!tache.fini} : tache));
         localStorage.setItem('tache', JSON.stringify(maListe))
     };
+
+    const afficherCalendrier = (e, tacheId) => {
+        e.preventDefault();
+        setCalendrier(prevState => !prevState);
+    }
 
     useEffect(() => {
         const storedTasks = JSON.parse(localStorage.getItem('tache'));
@@ -68,34 +79,41 @@ function App() {
 
     return (
         <>
-            { /* TODO : Ajouter le local storage */}
             { /* TODO : Ajouter le calendrier */}
-            { /* TODO : Ajouter les beaux SVG */}
+            { /* TODO : Regler le pb d'id */}
             <h1>To Do List</h1>
             <p>{maListe.filter(tache => tache.fini === true).length} / {maListe.length} taches terminées</p>
             {/* Partie d'ajout de tache */}
-            <form action="submit" onSubmit={ajouterToDo}>
+            <form>
                 <input ref={addInputs} type="hidden" value={maListe.length}/>
                 <input ref={addInputs} type="text" placeholder="Entrez votre tache ici"/>
                 {/* eslint-disable-next-line react/prop-types */}
-                <button onClick={handleClick} className="plus">
+                <button onClick={ajouterToDo} className="plus">
                     {/* eslint-disable-next-line react/prop-types */}
-                    <img src={"/images/plus_icon"} />
+                    <img src="images/plus-icon.svg" />
                 </button>
             </form>
             {/* Partie visualisation de taches */}
             <ul>
-                {maListe.map((tache, i) => (
-                    <Item
-                        key={i}
-                        id={tache.id}
-                        text={tache.text}
-                        onClick={supprimerToDo}
-                        onChange={modifierToDo}
-                        onConfirm={finirToDo}
-                        fini={tache.fini}
-                    />
-                ))}
+                <li>
+                    {maListe.map((tache, i) => (
+                        <Item
+                            key={i}
+                            id={tache.id}
+                            text={tache.text}
+                            date={tache.date}
+                            onClick={supprimerToDo}
+                            onChange={modifierToDo}
+                            onConfirm={finirToDo}
+                            fini={tache.fini}
+                            changeDate={afficherCalendrier}
+                            calendrier={tache.calendrier}
+                        />
+                    ))}
+                    {calendrier && <Calendar className="calendar"></Calendar>}
+                </li>
+
+
             </ul>
             {/*<Calendar />*/}
         </>

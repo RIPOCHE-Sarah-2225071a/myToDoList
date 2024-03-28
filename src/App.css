@@ -46,7 +46,7 @@ form {
 }
 
 img {
-  max-height: 10px;
+  height: 20px;
   background-color: white;
 }
 
@@ -68,4 +68,8 @@ button {
 
 li :checked {
   text-decoration: line-through;
+}
+
+li {
+  margin-bottom: 10px;
 }
