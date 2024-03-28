@@ -65,3 +65,7 @@ button {
   background-color: transparent;
   border: none;
 }
+
+li :checked {
+  text-decoration: line-through;
+}

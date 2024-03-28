@@ -1,4 +1,4 @@
-import {useRef, useState} from 'react'
+import {useRef, useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -8,6 +8,13 @@ import Item from "./Components/Item.jsx";
 import Calendar from 'react-calendar'
 
 function App() {
+    //localStorage.removeItem('tache')
+   /* let [maListe, setMaListe] = useState(() => {
+        // getting stored value
+        const saved = localStorage.getItem("maListe");
+        const initialValue = JSON.parse(saved);
+        return initialValue || "";
+    });*/
     let [maListe, setMaListe] = useState([])
     const inputs = useRef([]);
 
@@ -19,9 +26,10 @@ function App() {
 
     const ajouterToDo = (e) => {
         e.preventDefault();
-        setMaListe([...maListe, {id:inputs.current[0].value, name:inputs.current[1].value, fini:false}]);
-        console.log(maListe);
+        let tache = {id:inputs.current[0].value, text:inputs.current[1].value, fini:false}
+        setMaListe([...maListe, tache]);
         clearInputs();
+        localStorage.setItem('tache', JSON.stringify([...maListe, tache]));
     };
 
     const clearInputs = () => {
@@ -35,12 +43,23 @@ function App() {
     };
 
     const modifierToDo = (tacheId, texte) => {
-        setMaListe(maListe.map(tache => tache.id === tacheId ? {id:tacheId, name:texte, fini:tache.fini} : tache));
+        console.log(texte)
+        setMaListe(maListe.map(tache => tache.id === tacheId ? {...tache, text:texte} : tache));
+        console.log(maListe)
+        localStorage.setItem('tache', JSON.stringify(maListe))
     };
 
-    const confirmerToDo = () => {
-        alert('la tache est finie');
+    const finirToDo = (tacheId) => {
+        setMaListe(maListe.map(tache => tache.id === tacheId ? {...tache, fini:!tache.fini} : tache));
+        localStorage.setItem('tache', JSON.stringify(maListe))
     };
+
+    useEffect(() => {
+        const storedTasks = JSON.parse(localStorage.getItem('tache'));
+        if (storedTasks) {
+            setMaListe(storedTasks);
+        }
+    }, []);
 
     function handleClick() {
         //alert(maListe.length);
@@ -49,14 +68,15 @@ function App() {
 
     return (
         <>
+            { /* TODO : Ajouter le local storage */}
+            { /* TODO : Ajouter le calendrier */}
+            { /* TODO : Ajouter les beaux SVG */}
             <h1>To Do List</h1>
-            {/* TODO : Ajouter le x/y taches terminées */}
             <p>{maListe.filter(tache => tache.fini === true).length} / {maListe.length} taches terminées</p>
             {/* Partie d'ajout de tache */}
             <form action="submit" onSubmit={ajouterToDo}>
                 <input ref={addInputs} type="hidden" value={maListe.length}/>
                 <input ref={addInputs} type="text" placeholder="Entrez votre tache ici"/>
-
                 {/* eslint-disable-next-line react/prop-types */}
                 <button onClick={handleClick} className="plus">
                     {/* eslint-disable-next-line react/prop-types */}
@@ -69,14 +89,15 @@ function App() {
                     <Item
                         key={i}
                         id={tache.id}
-                        name={tache.name}
+                        text={tache.text}
                         onClick={supprimerToDo}
                         onChange={modifierToDo}
+                        onConfirm={finirToDo}
+                        fini={tache.fini}
                     />
                 ))}
             </ul>
             {/*<Calendar />*/}
-
         </>
     )
 }
