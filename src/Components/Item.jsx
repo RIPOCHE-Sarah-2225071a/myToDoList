@@ -1,4 +1,13 @@
+import Calendar from "react-calendar";
+import {useState} from "react";
+
 export default function Item(props) {
+
+    const [calendrier, setCalendrier] = useState(false);
+    const afficherCalendrier = (e) => {
+        e.preventDefault();
+        setCalendrier(prevState => !prevState);
+    }
 
     function supprimerItem(e) {
         e.preventDefault();
@@ -37,7 +46,7 @@ export default function Item(props) {
                 <input className="texte" defaultValue={props.text}/>
                 {/* eslint-disable-next-line react/prop-types */}
                 <input type="date" className="date" defaultValue={props.date}/>
-                <button onClick={changerDate}>
+                <button onClick={afficherCalendrier}>
                     <img src="images/calendar-days-svgrepo-com.svg" alt="choisirDate"></img>
                 </button>
                 <button onClick={modifierItem}>
@@ -47,6 +56,7 @@ export default function Item(props) {
                 <button onClick={supprimerItem}>
                     <img src="images/red-trash-can-icon.svg" alt={"poubelle"}></img>
                 </button>
+                {calendrier && <Calendar className="calendar"></Calendar>}
             </form>
         </li>
     );

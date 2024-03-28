@@ -60,10 +60,7 @@ function App() {
         localStorage.setItem('tache', JSON.stringify(maListe))
     };
 
-    const afficherCalendrier = (e, tacheId) => {
-        e.preventDefault();
-        setCalendrier(prevState => !prevState);
-    }
+
 
     useEffect(() => {
         const storedTasks = JSON.parse(localStorage.getItem('tache'));
@@ -71,11 +68,6 @@ function App() {
             setMaListe(storedTasks);
         }
     }, []);
-
-    function handleClick() {
-        //alert(maListe.length);
-    }
-
 
     return (
         <>
@@ -95,8 +87,8 @@ function App() {
             </form>
             {/* Partie visualisation de taches */}
             <ul>
-                <li>
-                    {maListe.map((tache, i) => (
+                {maListe.map((tache, i) => (
+                        <li>
                         <Item
                             key={i}
                             id={tache.id}
@@ -106,16 +98,11 @@ function App() {
                             onChange={modifierToDo}
                             onConfirm={finirToDo}
                             fini={tache.fini}
-                            changeDate={afficherCalendrier}
                             calendrier={tache.calendrier}
                         />
+                        </li>
                     ))}
-                    {calendrier && <Calendar className="calendar"></Calendar>}
-                </li>
-
-
             </ul>
-            {/*<Calendar />*/}
         </>
     )
 }
