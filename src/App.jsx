@@ -29,7 +29,7 @@ function App() {
     const ajouterToDo = (e) => {
         e.preventDefault();
         setIndex(prevState => prevState + 1);
-        let tache = {id:index, text:inputs.current[1].value, fini:false, date:null}
+        let tache = {id:index, texte:inputs.current[1].value, fini:false, date:null}
         setMaListe([...maListe, tache]);
         enleverInputs();
         localStorage.setItem('tache', JSON.stringify(maListe));
@@ -41,7 +41,7 @@ function App() {
     };
 
     const modifierToDo = (tacheId, texte) => {
-        setMaListe(maListe.map(tache => tache.id === tacheId ? {id:tache.id, text:texte, fini:tache.fini, date:tache.date} : tache));
+        setMaListe(maListe.map(tache => tache.id === tacheId ? {...tache, texte:texte} : tache));
         localStorage.setItem('tache', JSON.stringify(maListe))
     };
 
@@ -63,9 +63,7 @@ function App() {
             <form>
                 <input ref={ajouterInputs} type="hidden" value={maListe.length}/>
                 <input ref={ajouterInputs} type="text" placeholder="Entrez votre tache ici"/>
-                {/* eslint-disable-next-line react/prop-types */}
                 <button onClick={ajouterToDo} className="plus">
-                    {/* eslint-disable-next-line react/prop-types */}
                     <img src="images/plus-icon.svg" />
                 </button>
             </form>
